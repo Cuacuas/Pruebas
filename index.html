@@ -3,196 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control Privado - Deliburger</title>
+    <title>Deliburger - Hamburguesa & Delivery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-</head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen pb-12">
-
-    <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-gray-950 text-xl font-bold">
-                    <i class="ph-bold ph-gear"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-white">Deliburger Admin</h1>
-                    <p class="text-xs text-gray-400">Actualiza precios, textos e imágenes de forma segura</p>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-5xl mx-auto px-4 mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="md:col-span-2 space-y-6">
-            <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-xl space-y-4">
-                <h3 class="font-bold text-amber-400 flex items-center gap-2 border-b border-gray-700 pb-2">
-                    <i class="ph-bold ph-storefront"></i> Información General del Negocio
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs text-gray-400 font-semibold mb-1">Eslogan Comercial</label>
-                        <input type="text" id="cfg-slogan" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 font-semibold mb-1">WhatsApp (10 dígitos)</label>
-                        <input type="text" id="cfg-whatsapp" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block text-xs text-gray-400 font-semibold mb-1">Dirección Física</label>
-                        <input type="text" id="cfg-address" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 font-semibold mb-1">Pedido Mínimo ($)</label>
-                        <input type="number" id="cfg-min" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs text-gray-400 font-semibold mb-1">Costo de Envío ($)</label>
-                        <input type="number" id="cfg-shipping" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500">
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-xl space-y-4">
-                <h3 class="font-bold text-amber-400 flex items-center gap-2 border-b border-gray-700 pb-2">
-                    <i class="ph-bold ph-hamburger"></i> Lista de Productos (Precios e Imágenes)
-                </h3>
-                <div id="admin-products-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-2">
-                    </div>
-            </div>
-        </div>
-
-        <div class="space-y-6">
-            <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-xl sticky top-24 space-y-4">
-                <h3 class="font-bold text-white flex items-center gap-2">
-                    <i class="ph-bold ph-cloud-arrow-up text-emerald-400"></i> ¿Cómo publicar cambios?
-                </h3>
-                <p class="text-xs text-gray-400 leading-relaxed">
-                    1. Modifica la información o las fotos que quieras aquí en el panel.<br>
-                    2. Haz clic en el botón verde de abajo para **Generar Código Seguro**.<br>
-                    3. Copia todo el bloque resultante y reemplaza el contenido de tu archivo <span class="text-amber-400 font-semibold">index.html</span> en GitHub.
-                </p>
-                <button onclick="generateClientCode()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
-                    <i class="ph-bold ph-code-block text-lg"></i> Generar Código Seguro
-                </button>
-                
-                <div class="hidden" id="output-area">
-                    <label class="block text-xs font-bold text-emerald-400 mb-1">¡Código Generado! Copia todo esto:</label>
-                    <textarea id="final-code-text" readonly class="w-full h-48 bg-gray-950 text-gray-300 font-mono text-xs p-3 rounded-lg border border-gray-800 focus:outline-none" onclick="this.select()"></textarea>
-                    <p class="text-[10px] text-gray-500 mt-1 text-center">Haz clic dentro del cuadro para seleccionar todo de golpe.</p>
-                </div>
-            </div>
-        </div>
-    </main>
-
-<script>
-    // Datos base (Tus datos reales actuales)
-    const currentConfig = {
-        name: "Deliburger", slogan: "Hamburguesas con el auténtico sabor desde 2014", whatsapp: "5541273220", 
-        address: "Calle 4, Agrícola Pantitlán, Ciudad de México, CDMX", mapsLink: "https://maps.google.com/?q=Deliburger+Agricola+Pantitlan",
-        deliveryFee: 30, minOrder: 80, currency: "$", openHour: "16:00", closeHour: "23:00",
-        heroTitle: "Bienvenido a Deliburger",
-        heroDesc: "Hamburguesas de verdad preparadas al carbón con ingredientes de excelente calidad, deliciosas costras de queso fundido y pan brioche calientito. ¡Ordena de inmediato a domicilio!",
-        promoBadge: "¡AL CARBÓN COMPA!",
-        categories: ["Hamburguesas", "Combos", "Papas y Bebidas"],
-        menu: [
-            { id: 1, name: "Hamburguesa Niño", price: 45, category: "Hamburguesas", description: "100g de carne de res, jamón, quesillo, queso amarillo (sin verdura).", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80", tag: "Para niños" },
-            { id: 2, name: "Hamburguesa Clásica", price: 45, category: "Hamburguesas", description: "130g de carne de res, jamón, quesillo, queso amarillo, con todo.", image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=500&q=80", tag: "La de cajón" },
-            { id: 3, name: "Hamburguesa Hawaiana", price: 50, category: "Hamburguesas", description: "130g de carne de res, jamón, quesillo, queso amarillo, piña y cereza.", image: "https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?auto=format&fit=crop&w=500&q=80", tag: "Favorita" },
-            { id: 4, name: "Hamburguesa con Tocino", price: 50, category: "Hamburguesas", description: "130g de carne de res, jamón, quesillo, queso amarillo y tocino crujiente.", image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=500&q=80", tag: "Recomendada" },
-            { id: 5, name: "Hamburguesa con Salchicha", price: 50, category: "Hamburguesas", description: "130g de carne de res, jamón, quesillo, queso amarillo y deliciosas salchichas.", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=500&q=80", tag: "" },
-            { id: 6, name: "Hamburguesa Doble", price: 60, category: "Hamburguesas", description: "200g de carne de res, jamón, quesillo y queso amarillo, con todo.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80", tag: "Para el hambre" },
-            { id: 7, name: "Hamburguesa Doble Especial", price: 70, category: "Hamburguesas", description: "Pan brioche, 150g de carne de res, tocino, jamón, doble queso amarillo, doble quesillo a la plancha y cebolla caramelizada.", image: "https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&w=500&q=80", tag: "Premium" },
-            { id: 8, name: "Hamburguesa Gourmet", price: 70, category: "Hamburguesas", description: "Pan brioche, 130g de carne de res, queso de hoja, quesillo, queso amarillo y costra de queso Oaxaca con tocino calientito.", image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=500&q=80", tag: "Especialidad" },
-            { id: 9, name: "Hamburguesa Gourmet Manchego", price: 70, category: "Hamburguesas", description: "Pan brioche, 130g de carne de res, queso oaxaqueño, queso amarillo y costra de queso manchego con trozos de salchicha.", image: "https://images.unsplash.com/photo-1582196016295-f8c894d37922?auto=format&fit=crop&w=500&q=80", tag: "La más pedida" },
-            { id: 10, name: "Hamburguesa Cheeseburger", price: 70, category: "Hamburguesas", description: "Pan brioche, 150g de carne de res, tocino, jamón, queso amarillo, piña, plátano machito y doble quesillo.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80", tag: "Exótica" },
-            { id: 11, name: "Combo Consintiéndote", price: 70, category: "Combos", description: "Hamburguesa Clásica sencilla, papas francesas medianas y un Boing o agua.", image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80", tag: "Individual" },
-            { id: 12, name: "Combo Pareja", price: 135, category: "Combos", description: "2 Hamburguesas Clásicas + Papas Francesas grandes + 2 bebidas a elegir.", image: "https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=500&q=80", tag: "Para Compartir" },
-            { id: 13, name: "Combo Familiar", price: 245, category: "Combos", description: "4 Hamburguesas Clásicas + Papas Francesas Familiares + 1 refresco grande o jarra de agua.", image: "https://images.unsplash.com/photo-1534790566855-4cb788d389ec?auto=format&fit=crop&w=500&q=80", tag: "Familiar" },
-            { id: 14, name: "Papas Francesas", price: 35, category: "Papas y Bebidas", description: "Papas fritas corte clásico, sazonadas con sal, salsa cátsup y queso derretido.", image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=500&q=80", tag: "" },
-            { id: 15, name: "Papas Gajo", price: 40, category: "Papas y Bebidas", description: "Gajos de papa sazonados con especias finas y fritos al momento.", image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=500&q=80", tag: "Crujientes" },
-            { id: 16, name: "Papas Espirales", price: 45, category: "Papas y Bebidas", description: "Divertida forma de espiral con sazón especial de la casa.", image: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80", tag: "" },
-            { id: 17, name: "Agua Simple", price: 15, category: "Papas y Bebidas", description: "Botella de agua purificada fresca.", image: "https://images.unsplash.com/photo-1608885898957-a599fb18de37?auto=format&fit=crop&w=500&q=80", tag: "" },
-            { id: 18, name: "Boing (Varios sabores)", price: 18, category: "Papas y Bebidas", description: "Delicioso jugo de fruta natural (Mango, Guayaba, Manzana).", image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=500&q=80", tag: "Clásico" },
-            { id: 19, name: "Coca-Cola Original", price: 22, category: "Papas y Bebidas", description: "Refresco embotellado de 355ml frío.", image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80", tag: "" }
-        ]
-    };
-
-    document.addEventListener("DOMContentLoaded", () => {
-        // Cargar inputs generales
-        document.getElementById('cfg-slogan').value = currentConfig.slogan;
-        document.getElementById('cfg-whatsapp').value = currentConfig.whatsapp;
-        document.getElementById('cfg-address').value = currentConfig.address;
-        document.getElementById('cfg-min').value = currentConfig.minOrder;
-        document.getElementById('cfg-shipping').value = currentConfig.deliveryFee;
-
-        // Renderizar lista de edición de productos
-        const listContainer = document.getElementById('admin-products-list');
-        currentConfig.menu.forEach(item => {
-            const div = document.createElement('div');
-            div.className = "p-4 bg-gray-900 border border-gray-700 rounded-xl space-y-3";
-            div.innerHTML = `
-                <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-amber-400 bg-amber-950 px-2 py-0.5 rounded">${item.category}</span>
-                    <span class="text-xs text-gray-500 font-mono">ID: ${item.id}</span>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <div>
-                        <label class="block text-[10px] text-gray-400 font-semibold mb-0.5">Nombre del Platillo</label>
-                        <input type="text" value="${item.name}" data-id="${item.id}" data-field="name" class="prod-input w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-400 font-semibold mb-0.5">Precio ($)</label>
-                        <input type="number" value="${item.price}" data-id="${item.id}" data-field="price" class="prod-input w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-400 font-semibold mb-0.5">Etiqueta (Opcional)</label>
-                        <input type="text" value="${item.tag || ''}" data-id="${item.id}" data-field="tag" class="prod-input w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-white">
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-[10px] text-gray-400 font-semibold mb-0.5">Enlace de la Foto (URL de Internet)</label>
-                    <input type="text" value="${item.image}" data-id="${item.id}" data-field="image" class="prod-input w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-emerald-400 font-mono">
-                </div>
-            `;
-            listContainer.appendChild(div);
-        });
-    });
-
-    function generateClientCode() {
-        // 1. Recolectar datos generales actualizados
-        currentConfig.slogan = document.getElementById('cfg-slogan').value;
-        currentConfig.whatsapp = document.getElementById('cfg-whatsapp').value;
-        currentConfig.address = document.getElementById('cfg-address').value;
-        currentConfig.minOrder = Number(document.getElementById('cfg-min').value);
-        currentConfig.deliveryFee = Number(document.getElementById('cfg-shipping').value);
-
-        // 2. Recolectar datos de los productos
-        const inputs = document.querySelectorAll('.prod-input');
-        inputs.forEach(input => {
-            const id = Number(input.getAttribute('data-id'));
-            const field = input.getAttribute('data-field');
-            const val = input.value;
-
-            const targetItem = currentConfig.menu.find(i => i.id === id);
-            if (targetItem) {
-                if (field === 'price') {
-                    targetItem[field] = Number(val);
-                } else {
-                    targetItem[field] = val;
-                }
-            }
-        });
-
-        // 3. Modificar únicamente la sección estática del objeto del cliente original
-        const clientBaseTemplate = `<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${currentConfig.name} - Hamburguesa & Delivery</title>
-    <script src="https://cdn.tailwindcss.com"><\/script>
-    <script src="https://unpkg.com/@phosphor-icons/web"><\/script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Rubik+Dirt&family=Rubik:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -216,7 +29,7 @@
                 <i class="ph-bold ph-hamburger"></i>
             </div>
             <div>
-                <h1 class="font-black text-2xl tracking-tight text-yellow-400 neon-text-yellow">${currentConfig.name}</h1>
+                <h1 class="font-black text-2xl tracking-tight text-yellow-400 neon-text-yellow">Deliburger</h1>
                 <div class="flex items-center gap-2">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span id="status-text" class="text-xs text-emerald-400 font-medium">Abierto ahora</span>
@@ -235,26 +48,26 @@
     <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
         <div class="md:col-span-7 text-center md:text-left space-y-6">
             <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-950/60 text-rose-400 border border-rose-500/30 tracking-wide uppercase">
-                <i class="ph-bold ph-flame text-base animate-bounce"></i> ${currentConfig.promoBadge}
+                <i class="ph-bold ph-flame text-base animate-bounce"></i> ¡AL CARBÓN COMPA!
             </div>
             <h2 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white uppercase">
-                Bienvenido a <span class="text-yellow-400 neon-text-yellow block sm:inline">${currentConfig.name}</span>
+                Bienvenido a <span class="text-yellow-400 neon-text-yellow block sm:inline">Deliburger</span>
             </h2>
-            <p class="text-base sm:text-lg text-neutral-300 max-w-xl mx-auto md:mx-0">${currentConfig.heroDesc}</p>
+            <p class="text-base sm:text-lg text-neutral-300 max-w-xl mx-auto md:mx-0">Hamburguesas de verdad preparadas al carbón con ingredientes de excelente calidad, deliciosas costras de queso fundido y pan brioche calientito. ¡Ordena de inmediato a domicilio!</p>
             <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
                 <a href="#menu-container" class="px-8 py-3.5 bg-yellow-400 text-neutral-950 hover:bg-yellow-500 font-bold rounded-xl shadow-lg text-center transition-all flex items-center justify-center gap-2">
                     <i class="ph-bold ph-book-open-text text-lg"></i> Ver Carta Completa
                 </a>
             </div>
             <div class="grid grid-cols-3 gap-4 pt-6 border-t border-neutral-850 max-w-md mx-auto md:mx-0 text-center md:text-left">
-                <div><h5 class="font-black text-yellow-400 text-xl">${currentConfig.currency}${currentConfig.minOrder}</h5><p class="text-xs text-stone-400">Pedido Mínimo</p></div>
-                <div><h5 class="font-black text-yellow-400 text-xl">${currentConfig.currency}${currentConfig.deliveryFee}</h5><p class="text-xs text-stone-400">Envío Estándar</p></div>
+                <div><h5 class="font-black text-yellow-400 text-xl">$80</h5><p class="text-xs text-stone-400">Pedido Mínimo</p></div>
+                <div><h5 class="font-black text-yellow-400 text-xl">$15</h5><p class="text-xs text-stone-400">Envío Estándar</p></div>
                 <div><h5 class="font-black text-yellow-400 text-xl">30-45 min</h5><p class="text-xs text-stone-400">Tiempo Entrega</p></div>
             </div>
         </div>
         <div class="md:col-span-5 flex justify-center">
             <div class="relative w-72 h-72 sm:w-96 sm:h-96">
-                <img src="${currentConfig.menu[8].image}" class="w-full h-full object-cover rounded-3xl shadow-2xl border-4 border-yellow-400/80 neon-border-yellow">
+                <img src="https://images.unsplash.com/photo-1582196016295-f8c894d37922?auto=format&fit=crop&w=500&q=80" class="w-full h-full object-cover rounded-3xl shadow-2xl border-4 border-yellow-400/80 neon-border-yellow">
             </div>
         </div>
     </div>
@@ -305,14 +118,206 @@
 
 <footer class="bg-neutral-950 text-neutral-400 pt-16 pb-8 border-t border-neutral-900">
     <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 pb-12">
-        <div><span class="font-black text-xl text-yellow-400">${currentConfig.name}</span><p class="text-sm text-stone-400 mt-2">${currentConfig.slogan}</p></div>
-        <div><h4 class="font-bold text-white text-xs uppercase mb-2">Horario</h4><p class="text-sm text-stone-400">Miércoles a Lunes: ${currentConfig.openHour} - ${currentConfig.closeHour}</p></div>
-        <div><h4 class="font-bold text-white text-xs uppercase mb-2">Ubicación</h4><p class="text-sm text-stone-400">${currentConfig.address}</p></div>
+        <div><span class="font-black text-xl text-yellow-400">Deliburger</span><p class="text-sm text-stone-400 mt-2">Hamburguesas con el auténtico sabor desde 2014</p></div>
+        <div><h4 class="font-bold text-white text-xs uppercase mb-2">Horario</h4><p class="text-sm text-stone-400">Miércoles a Lunes: 16:00 - 23:00</p></div>
+        <div><h4 class="font-bold text-white text-xs uppercase mb-2">Ubicación</h4><p class="text-sm text-stone-400">Calle 4, Agrícola Pantitlán, Ciudad de México, CDMX</p></div>
     </div>
 </footer>
 
 <script>
-    const config = ${JSON.stringify(currentConfig, null, 4)};
+    const config = {
+    "name": "Deliburger",
+    "slogan": "Hamburguesas con el auténtico sabor desde 2014",
+    "whatsapp": "5541273220",
+    "address": "Calle 4, Agrícola Pantitlán, Ciudad de México, CDMX",
+    "mapsLink": "https://maps.google.com/?q=Deliburger+Agricola+Pantitlan",
+    "deliveryFee": 15,
+    "minOrder": 80,
+    "currency": "$",
+    "openHour": "16:00",
+    "closeHour": "23:00",
+    "heroTitle": "Bienvenido a Deliburger",
+    "heroDesc": "Hamburguesas de verdad preparadas al carbón con ingredientes de excelente calidad, deliciosas costras de queso fundido y pan brioche calientito. ¡Ordena de inmediato a domicilio!",
+    "promoBadge": "¡AL CARBÓN COMPA!",
+    "categories": [
+        "Hamburguesas",
+        "Combos",
+        "Papas y Bebidas"
+    ],
+    "menu": [
+        {
+            "id": 1,
+            "name": "Hamburguesa Niño",
+            "price": 45,
+            "category": "Hamburguesas",
+            "description": "100g de carne de res, jamón, quesillo, queso amarillo (sin verdura).",
+            "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80",
+            "tag": "Para niños"
+        },
+        {
+            "id": 2,
+            "name": "Hamburguesa Clásica",
+            "price": 45,
+            "category": "Hamburguesas",
+            "description": "130g de carne de res, jamón, quesillo, queso amarillo, con todo.",
+            "image": "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=500&q=80",
+            "tag": "La de cajón"
+        },
+        {
+            "id": 3,
+            "name": "Hamburguesa Hawaiana",
+            "price": 50,
+            "category": "Hamburguesas",
+            "description": "130g de carne de res, jamón, quesillo, queso amarillo, piña y cereza.",
+            "image": "https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?auto=format&fit=crop&w=500&q=80",
+            "tag": "Favorita"
+        },
+        {
+            "id": 4,
+            "name": "Hamburguesa con Tocino",
+            "price": 50,
+            "category": "Hamburguesas",
+            "description": "130g de carne de res, jamón, quesillo, queso amarillo y tocino crujiente.",
+            "image": "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=500&q=80",
+            "tag": "Recomendada"
+        },
+        {
+            "id": 5,
+            "name": "Hamburguesa con Salchicha",
+            "price": 50,
+            "category": "Hamburguesas",
+            "description": "130g de carne de res, jamón, quesillo, queso amarillo y deliciosas salchichas.",
+            "image": "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=500&q=80",
+            "tag": ""
+        },
+        {
+            "id": 6,
+            "name": "Hamburguesa Doble",
+            "price": 60,
+            "category": "Hamburguesas",
+            "description": "200g de carne de res, jamón, quesillo y queso amarillo, con todo.",
+            "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80",
+            "tag": "Para el hambre"
+        },
+        {
+            "id": 7,
+            "name": "Hamburguesa Doble Especial",
+            "price": 70,
+            "category": "Hamburguesas",
+            "description": "Pan brioche, 150g de carne de res, tocino, jamón, doble queso amarillo, doble quesillo a la plancha y cebolla caramelizada.",
+            "image": "https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&w=500&q=80",
+            "tag": "Premium"
+        },
+        {
+            "id": 8,
+            "name": "Hamburguesa Gourmet",
+            "price": 70,
+            "category": "Hamburguesas",
+            "description": "Pan brioche, 130g de carne de res, queso de hoja, quesillo, queso amarillo y costra de queso Oaxaca con tocino calientito.",
+            "image": "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=500&q=80",
+            "tag": "Especialidad"
+        },
+        {
+            "id": 9,
+            "name": "Hamburguesa Gourmet Manchego",
+            "price": 70,
+            "category": "Hamburguesas",
+            "description": "Pan brioche, 130g de carne de res, queso oaxaqueño, queso amarillo y costra de queso manchego con trozos de salchicha.",
+            "image": "https://images.unsplash.com/photo-1582196016295-f8c894d37922?auto=format&fit=crop&w=500&q=80",
+            "tag": "La más pedida"
+        },
+        {
+            "id": 10,
+            "name": "Hamburguesa Cheeseburger",
+            "price": 70,
+            "category": "Hamburguesas",
+            "description": "Pan brioche, 150g de carne de res, tocino, jamón, queso amarillo, piña, plátano machito y doble quesillo.",
+            "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80",
+            "tag": "Exótica"
+        },
+        {
+            "id": 11,
+            "name": "Combo Consintiéndote",
+            "price": 70,
+            "category": "Combos",
+            "description": "Hamburguesa Clásica sencilla, papas francesas medianas y un Boing o agua.",
+            "image": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80",
+            "tag": "Individual"
+        },
+        {
+            "id": 12,
+            "name": "Combo Pareja",
+            "price": 135,
+            "category": "Combos",
+            "description": "2 Hamburguesas Clásicas + Papas Francesas grandes + 2 bebidas a elegir.",
+            "image": "https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=500&q=80",
+            "tag": "Para Compartir"
+        },
+        {
+            "id": 13,
+            "name": "Combo Familiar",
+            "price": 245,
+            "category": "Combos",
+            "description": "4 Hamburguesas Clásicas + Papas Francesas Familiares + 1 refresco grande o jarra de agua.",
+            "image": "https://images.unsplash.com/photo-1534790566855-4cb788d389ec?auto=format&fit=crop&w=500&q=80",
+            "tag": "Familiar"
+        },
+        {
+            "id": 14,
+            "name": "Papas Francesas",
+            "price": 35,
+            "category": "Papas y Bebidas",
+            "description": "Papas fritas corte clásico, sazonadas con sal, salsa cátsup y queso derretido.",
+            "image": "https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=500&q=80",
+            "tag": ""
+        },
+        {
+            "id": 15,
+            "name": "Papas Gajo",
+            "price": 40,
+            "category": "Papas y Bebidas",
+            "description": "Gajos de papa sazonados con especias finas y fritos al momento.",
+            "image": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=500&q=80",
+            "tag": "Crujientes"
+        },
+        {
+            "id": 16,
+            "name": "Papas Espirales",
+            "price": 45,
+            "category": "Papas y Bebidas",
+            "description": "Divertida forma de espiral con sazón especial de la casa.",
+            "image": "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80",
+            "tag": ""
+        },
+        {
+            "id": 17,
+            "name": "Agua Simple",
+            "price": 15,
+            "category": "Papas y Bebidas",
+            "description": "Botella de agua purificada fresca.",
+            "image": "https://images.unsplash.com/photo-1608885898957-a599fb18de37?auto=format&fit=crop&w=500&q=80",
+            "tag": ""
+        },
+        {
+            "id": 18,
+            "name": "Boing (Varios sabores)",
+            "price": 18,
+            "category": "Papas y Bebidas",
+            "description": "Delicioso jugo de fruta natural (Mango, Guayaba, Manzana).",
+            "image": "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=500&q=80",
+            "tag": "Clásico"
+        },
+        {
+            "id": 19,
+            "name": "Coca-Cola Original",
+            "price": 22,
+            "category": "Papas y Bebidas",
+            "description": "Refresco embotellado de 355ml frío.",
+            "image": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80",
+            "tag": ""
+        }
+    ]
+};
     let cart = []; let currentCategory = "Todas";
     document.addEventListener("DOMContentLoaded", () => { checkRestaurantStatus(); renderCategories(); renderMenu(); });
     function checkRestaurantStatus() { }
@@ -333,17 +338,17 @@
         const grid = document.getElementById('menu-grid'); const searchQuery = document.getElementById('search-input').value.toLowerCase(); grid.innerHTML = '';
         config.menu.filter(item => (currentCategory === "Todas" || item.category === currentCategory) && (item.name.toLowerCase().includes(searchQuery))).forEach(item => {
             const card = document.createElement('div'); card.className = "overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900 flex flex-col h-full";
-            card.innerHTML = \`
-                <div class="relative h-44"><img src="\${item.image}" class="w-full h-full object-cover"></div>
+            card.innerHTML = `
+                <div class="relative h-44"><img src="${item.image}" class="w-full h-full object-cover"></div>
                 <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
                     <div class="flex justify-between items-start">
-                        <h4 class="font-bold text-stone-100 text-sm">\${item.name}</h4>
-                        <span class="font-extrabold text-yellow-400">\${config.currency}\${item.price}</span>
+                        <h4 class="font-bold text-stone-100 text-sm">${item.name}</h4>
+                        <span class="font-extrabold text-yellow-400">${config.currency}${item.price}</span>
                     </div>
-                    <p class="text-xs text-stone-400">\${item.description}</p>
-                    <button onclick="addToCart(\${item.id})" class="w-full py-2 bg-neutral-950 text-yellow-400 font-bold border border-yellow-400/20 rounded-xl text-xs hover:bg-yellow-400 hover:text-black transition-all">Añadir a Orden</button>
+                    <p class="text-xs text-stone-400">${item.description}</p>
+                    <button onclick="addToCart(${item.id})" class="w-full py-2 bg-neutral-950 text-yellow-400 font-bold border border-yellow-400/20 rounded-xl text-xs hover:bg-yellow-400 hover:text-black transition-all">Añadir a Orden</button>
                 </div>
-            \`;
+            `;
             grid.appendChild(card);
         });
     }
@@ -351,7 +356,7 @@
     function addToCart(id) { const item = config.menu.find(p => p.id === id); const exist = cart.find(i => i.id === id); if(exist) { exist.qty++; } else { cart.push({...item, qty: 1}); } updateCartUI(); }
     function updateCartUI() {
         const container = document.getElementById('cart-items-container'); container.innerHTML = ''; let subtotal = 0; let totalItems = 0;
-        cart.forEach(i => { subtotal += (i.price * i.qty); totalItems += i.qty; container.innerHTML += \`<div class="flex justify-between items-center text-sm text-white"><span>\${i.name} (x\${i.qty})</span><span>\${config.currency}\${i.price * i.qty}</span></div>\`; });
+        cart.forEach(i => { subtotal += (i.price * i.qty); totalItems += i.qty; container.innerHTML += `<div class="flex justify-between items-center text-sm text-white"><span>${i.name} (x${i.qty})</span><span>${config.currency}${i.price * i.qty}</span></div>`; });
         document.getElementById('cart-count').innerText = totalItems;
         document.getElementById('cart-header-total').innerText = config.currency + subtotal.toFixed(2);
         document.getElementById('cart-subtotal').innerText = config.currency + subtotal.toFixed(2);
@@ -361,17 +366,10 @@
     }
     function sendOrderToWhatsApp() {
         const name = document.getElementById('order-name').value; const addr = document.getElementById('order-address').value;
-        let msg = \`*🔥 Nuevo Pedido en \${config.name}*\\n\\n*Cliente:* \${name}\\n*Dirección:* \${addr}\\n\\n*Detalle:*\\n\`;
-        let sub = 0; cart.forEach(i => { msg += \`- \${i.qty}x \${i.name} -> \${config.currency}\${i.price * i.qty}\\n\`; sub += (i.price * i.qty); });
-        msg += \`\\n*Total con Envío:* \${config.currency}\${(sub + config.deliveryFee).toFixed(2)}\`;
-        window.open(\`https://api.whatsapp.com/send?phone=\${config.whatsapp}&text=\${encodeURIComponent(msg)}\`, '_blank');
-    }
-<\/script>
-</body>
-</html>`;
-
-        document.getElementById('final-code-text').value = clientBaseTemplate;
-        document.getElementById('output-area').classList.remove('hidden');
+        let msg = `*🔥 Nuevo Pedido en ${config.name}*\n\n*Cliente:* ${name}\n*Dirección:* ${addr}\n\n*Detalle:*\n`;
+        let sub = 0; cart.forEach(i => { msg += `- ${i.qty}x ${i.name} -> ${config.currency}${i.price * i.qty}\n`; sub += (i.price * i.qty); });
+        msg += `\n*Total con Envío:* ${config.currency}${(sub + config.deliveryFee).toFixed(2)}`;
+        window.open(`https://api.whatsapp.com/send?phone=${config.whatsapp}&text=${encodeURIComponent(msg)}`, '_blank');
     }
 </script>
 </body>
