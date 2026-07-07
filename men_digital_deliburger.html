@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deliburger - Hamburguesa & Delivery</title>
+    <!-- Tailwind CSS para el diseño responsivo -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Iconos Phosphor -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Rubik+Dirt&family=Rubik:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Rubik', 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #0d0d0d;
+        }
+        
+        /* Efecto de pared de ladrillos oscuros inspirado en la imagen */
+        .brick-bg {
+            background-color: #0b0b0c;
+            background-image: 
+                linear-gradient(335deg, #141416 23px, transparent 23px),
+                linear-gradient(155deg, #141416 23px, transparent 23px),
+                linear-gradient(335deg, #141416 23px, transparent 23px),
+                linear-gradient(155deg, #141416 23px, transparent 23px);
+            background-size: 58px 58px;
+            background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+        }
+
+        /* Efectos de neón basados en el logo y menú de Deliburger */
+        .neon-text-yellow {
+            text-shadow: 0 0 5px rgba(253, 224, 71, 0.3), 0 0 10px rgba(253, 224, 71, 0.5), 0 0 20px rgba(253, 224, 71, 0.7);
+        }
+        
+        .neon-text-pink {
+            text-shadow: 0 0 5px rgba(244, 63, 94, 0.3), 0 0 10px rgba(244, 63, 94, 0.5), 0 0 20px rgba(244, 63, 94, 0.7);
+        }
+
+        .neon-border-pink {
+            box-shadow: 0 0 5px rgba(244, 63, 94, 0.2), inset 0 0 5px rgba(244, 63, 94, 0.2);
+            border-color: rgba(244, 63, 94, 0.6);
+        }
+
+        .neon-border-green {
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.3), inset 0 0 4px rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.6);
+        }
+
+        .neon-border-yellow {
+            box-shadow: 0 0 8px rgba(234, 179, 8, 0.3), inset 0 0 4px rgba(234, 179, 8, 0.2);
+            border-color: rgba(234, 179, 8, 0.6);
+        }
+
+        /* Ocultar barra de scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="text-stone-100 transition-colors duration-300 brick-bg min-h-screen">
+
+<script>
+    // Configuración real obtenida de Deliburger (image_673dcb.jpg y Maps)
+    const DEFAULT_CONFIG = {
+        name: "Deliburger",
+        slogan: "Hamburguesas con el auténtico sabor desde 2014",
+        whatsapp: "5541273220", // Teléfono del negocio para pedidos directos
+        address: "Calle 4, Agrícola Pantitlán, Ciudad de México, CDMX",
+        mapsLink: "https://maps.google.com/?q=Deliburger+Agricola+Pantitlan",
+        deliveryFee: 30,
+        minOrder: 80,
+        currency: "$",
+        openHour: "16:00",
+        closeHour: "23:00",
+        theme: "neon_deliburger",
+        heroTitle: "Bienvenido a Deliburger",
+        heroDesc: "Hamburguesas de verdad preparadas al carbón con ingredientes de excelente calidad, deliciosas costras de queso fundido y pan brioche calientito. ¡Ordena de inmediato a domicilio!",
+        promoBadge: "¡AL CARBÓN COMPA!",
+        categories: ["Hamburguesas", "Combos", "Papas y Bebidas"],
+        menu: [
+            // Categoría: Hamburguesas (Directo de la foto del menú)
+            { id: 1, name: "Hamburguesa Niño", price: 45, category: "Hamburguesas", description: "100g de carne de res, jamón, quesillo, queso amarillo (sin verdura).", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80", tag: "Para niños" },
+            { id: 2, name: "Hamburguesa Clásica", price: 45, category: "Hamburguesas", description: "130g de carne de res, jamón, quesillo, queso amarillo, con todo.", image: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=500&q=80", tag: "La de cajón" },
+            { id: 3, name: "Hamburguesa Hawaiana", price: 50, category: "Hamburguesas", description: "130g de carne de res, jamón, quesillo, queso amarillo, piña y cereza.", image: "https://images.unsplash.com/photo-1525059696034-4967a8e1dca2?auto=format&fit=crop&w=500&q=80", tag: "Favorita" },
+            { id: 4, name: "Hamburguesa con Tocino", price: 50, category: "Hamburguesas", description: "130g de carne de res, jamón, quesillo, queso amarillo y tocino crujiente.", image: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=500&q=80", tag: "Recomendada" },
+            { id: 5, name: "Hamburguesa con Salchicha", price: 50, category: "Hamburguesas", description: "130g de carne de res, jamón, quesillo, queso amarillo y deliciosas salchichas.", image: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=500&q=80", tag: "" },
+            { id: 6, name: "Hamburguesa Doble", price: 60, category: "Hamburguesas", description: "200g de carne de res, jamón, quesillo y queso amarillo, con todo.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80", tag: "Para el hambre" },
+            { id: 7, name: "Hamburguesa Doble Especial", price: 70, category: "Hamburguesas", description: "Pan brioche, 150g de carne de res, tocino, jamón, doble queso amarillo, doble quesillo a la plancha y cebolla caramelizada.", image: "https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&w=500&q=80", tag: "Premium" },
+            { id: 8, name: "Hamburguesa Gourmet", price: 70, category: "Hamburguesas", description: "Pan brioche, 130g de carne de res, queso de hoja, quesillo, queso amarillo y costra de queso Oaxaca con tocino calientito.", image: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=500&q=80", tag: "Especialidad" },
+            { id: 9, name: "Hamburguesa Gourmet Manchego", price: 70, category: "Hamburguesas", description: "Pan brioche, 130g de carne de res, queso oaxaqueño, queso amarillo y costra de queso manchego con trozos de salchicha.", image: "https://images.unsplash.com/photo-1582196016295-f8c894d37922?auto=format&fit=crop&w=500&q=80", tag: "La más pedida" },
+            { id: 10, name: "Hamburguesa Cheeseburger", price: 70, category: "Hamburguesas", description: "Pan brioche, 150g de carne de res, tocino, jamón, queso amarillo, piña, plátano machito y doble quesillo.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80", tag: "Exótica" },
+
+            // Categoría: Combos (Sección lateral del menú)
+            { id: 11, name: "Combo Consintiéndote", price: 70, category: "Combos", description: "Hamburguesa Clásica sencilla, papas francesas medianas y un Boing o agua.", image: "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=500&q=80", tag: "Individual" },
+            { id: 12, name: "Combo Pareja", price: 135, category: "Combos", description: "2 Hamburguesas Clásicas + Papas Francesas grandes + 2 bebidas a elegir.", image: "https://images.unsplash.com/photo-1610614819513-58e34989848b?auto=format&fit=crop&w=500&q=80", tag: "Para Compartir" },
+            { id: 13, name: "Combo Familiar", price: 245, category: "Combos", description: "4 Hamburguesas Clásicas + Papas Francesas Familiares + 1 refresco grande o jarra de agua.", image: "https://images.unsplash.com/photo-1534790566855-4cb788d389ec?auto=format&fit=crop&w=500&q=80", tag: "Familiar" },
+
+            // Categoría: Papas y Bebidas
+            { id: 14, name: "Papas Francesas", price: 35, category: "Papas y Bebidas", description: "Papas fritas corte clásico, sazonadas con sal, salsa cátsup y queso derretido.", image: "https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=500&q=80", tag: "" },
+            { id: 15, name: "Papas Gajo", price: 40, category: "Papas y Bebidas", description: "Gajos de papa sazonados con especias finas y fritos al momento.", image: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=500&q=80", tag: "Crujientes" },
+            { id: 16, name: "Papas Espirales", price: 45, category: "Papas y Bebidas", description: "Divertida forma de espiral con sazón especial de la casa.", image: "https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=500&q=80", tag: "" },
+            { id: 17, name: "Agua Simple", price: 15, category: "Papas y Bebidas", description: "Botella de agua purificada fresca.", image: "https://images.unsplash.com/photo-1608885898957-a599fb18de37?auto=format&fit=crop&w=500&q=80", tag: "" },
+            { id: 18, name: "Boing (Varios sabores)", price: 18, category: "Papas y Bebidas", description: "Delicioso jugo de fruta natural (Mango, Guayaba, Manzana).", image: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=500&q=80", tag: "Clásico" },
+            { id: 19, name: "Coca-Cola Original", price: 22, category: "Papas y Bebidas", description: "Refresco embotellado de 355ml frío.", image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80", tag: "" }
+        ]
+    };
+
+    // Almacenamiento local del estado de configuración
+    let config = JSON.parse(localStorage.getItem('restaurant_config')) || DEFAULT_CONFIG;
+    let cart = [];
+    let currentCategory = "Todas";
+</script>
+
+<script>
+    const THEMES = {
+        neon_deliburger: {
+            bg: "brick-bg",
+            primary: "yellow-400",
+            primaryHover: "yellow-500",
+            primaryBg: "bg-yellow-400",
+            primaryText: "text-yellow-400",
+            accent: "rose-500",
+            accentBg: "bg-rose-500",
+            textHeader: "text-yellow-400",
+            cardBg: "bg-neutral-900/90",
+            headerFont: "font-sans",
+            badgeBg: "bg-rose-950/60",
+            badgeText: "text-rose-400"
+        },
+        carbon: {
+            bg: "bg-zinc-950",
+            primary: "red-600",
+            primaryHover: "red-700",
+            primaryBg: "bg-red-600",
+            primaryText: "text-red-500",
+            accent: "yellow-500",
+            accentBg: "bg-yellow-500",
+            textHeader: "text-zinc-100",
+            cardBg: "bg-zinc-900",
+            headerFont: "font-sans",
+            badgeBg: "bg-red-950/40",
+            badgeText: "text-red-400"
+        }
+    };
+</script>
+
+<header id="header-container" class="sticky top-0 z-40 backdrop-blur-md bg-neutral-950/90 border-b border-neutral-800 shadow-xl transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <!-- Icono Neón de Hamburguesa -->
+            <div id="rest-icon" class="w-11 h-11 rounded-full flex items-center justify-center text-yellow-400 text-2xl shadow-lg border border-yellow-400/50 bg-neutral-900 neon-border-yellow">
+                <i class="ph-bold ph-hamburger"></i>
+            </div>
+            <div>
+                <h1 id="brand-name" class="font-black text-2xl tracking-tight text-yellow-400 neon-text-yellow">Deliburger</h1>
+                <div class="flex items-center gap-2">
+                    <span id="status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="status-text" class="text-xs text-emerald-400 font-medium">Abierto ahora</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <!-- Botón de Personalizar (Administración) -->
+            <button onclick="toggleCustomizer()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-neutral-800 text-stone-200 border border-neutral-700 rounded-full hover:bg-neutral-700 transition-colors">
+                <i class="ph-bold ph-gear-six text-sm animate-spin-slow text-yellow-400"></i>
+                <span class="hidden sm:inline">Configurar Menú</span>
+            </button>
+            
+            <!-- Botón del Carrito Flotante -->
+            <button onclick="toggleCart()" class="relative flex items-center gap-2 px-4 py-2 bg-yellow-400 hover:bg-yellow-500 text-neutral-950 rounded-full font-bold text-sm shadow-lg transition-transform active:scale-95">
+                <i class="ph-bold ph-shopping-cart text-lg"></i>
+                <span id="cart-count" class="absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-xxs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-lg border border-neutral-900 animate-bounce">0</span>
+                <span id="cart-header-total" class="hidden sm:inline font-black border-l border-neutral-950/20 pl-2">$0.00</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div id="customizer-panel" class="hidden fixed inset-y-0 right-0 z-50 w-full max-w-md bg-neutral-900 shadow-2xl border-l border-neutral-800 flex flex-col transform transition-transform duration-300">
+    <div class="p-6 border-b border-neutral-800 flex items-center justify-between bg-neutral-950">
+        <div class="flex items-center gap-2">
+            <i class="ph-bold ph-sliders-horizontal text-xl text-yellow-400"></i>
+            <h3 class="font-bold text-white">Configuración del Negocio</h3>
+        </div>
+        <button onclick="toggleCustomizer()" class="w-8 h-8 rounded-full hover:bg-neutral-800 flex items-center justify-center text-neutral-400 transition-colors">
+            <i class="ph-bold ph-x text-lg"></i>
+        </button>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
+        <!-- Información del Local -->
+        <div class="space-y-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-yellow-400">Datos de Deliburger</h4>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">Nombre Comercial</label>
+                <input type="text" id="cfg-name" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">Eslogan (Footer)</label>
+                <textarea id="cfg-slogan" rows="2" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">Etiqueta de Promoción (Hero)</label>
+                <input type="text" id="cfg-promo" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">Título de Bienvenida (Hero)</label>
+                <input type="text" id="cfg-hero-title" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">Descripción del Negocio (Hero)</label>
+                <textarea id="cfg-hero-desc" rows="3" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400"></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">WhatsApp de Pedidos (Código país + número sin espacios)</label>
+                <input type="text" id="cfg-whatsapp" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400">
+            </div>
+        </div>
+
+        <!-- Envíos y Horarios -->
+        <div class="space-y-4 pt-4 border-t border-neutral-800">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-yellow-400">Envíos y Horario</h4>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-medium text-stone-300 mb-1">Costo de Envío ($)</label>
+                    <input type="number" id="cfg-delivery" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-stone-300 mb-1">Monto Mínimo ($)</label>
+                    <input type="number" id="cfg-min" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-medium text-stone-300 mb-1">Apertura (Hora)</label>
+                    <input type="time" id="cfg-open" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-stone-300 mb-1">Cierre (Hora)</label>
+                    <input type="time" id="cfg-close" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg text-sm focus:outline-none focus:border-yellow-400">
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestión directa de platillos -->
+        <div class="space-y-4 pt-4 border-t border-neutral-800">
+            <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-yellow-400">Menú Actual</h4>
+                <button onclick="openAddProductModal()" class="text-xs font-bold text-yellow-400 hover:text-yellow-300 flex items-center gap-1">
+                    <i class="ph-bold ph-plus"></i> Añadir Platillo
+                </button>
+            </div>
+            <div id="admin-menu-list" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                <!-- Poblado dinámicamente -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="p-6 bg-neutral-950 border-t border-neutral-800 flex gap-3">
+        <button onclick="resetToDefaultConfig()" class="flex-1 py-2 px-4 border border-neutral-700 text-neutral-300 text-sm font-semibold rounded-lg hover:bg-neutral-800 transition-colors">
+            Reinicio Fábrica
+        </button>
+        <button onclick="saveAdminConfig()" class="flex-1 py-2 px-4 bg-yellow-400 text-neutral-950 text-sm font-bold rounded-lg hover:bg-yellow-500 transition-colors shadow-lg">
+            Guardar Cambios
+        </button>
+    </div>
+</div>
+
+<div id="product-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-neutral-900 rounded-2xl max-w-md w-full overflow-hidden border border-neutral-800 shadow-2xl">
+        <div class="p-5 border-b border-neutral-800 flex items-center justify-between bg-neutral-950">
+            <h3 id="product-modal-title" class="font-bold text-yellow-400">Añadir Platillo</h3>
+            <button onclick="closeProductModal()" class="w-8 h-8 rounded-full hover:bg-neutral-800 flex items-center justify-center text-stone-400">
+                <i class="ph-bold ph-x text-lg"></i>
+            </button>
+        </div>
+        <form id="product-form" onsubmit="handleProductSubmit(event)" class="p-5 space-y-4 text-sm">
+            <input type="hidden" id="prod-id">
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">Nombre del Platillo*</label>
+                <input type="text" id="prod-name" required class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg focus:outline-none focus:border-yellow-400">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-medium text-stone-300 mb-1">Precio ($)*</label>
+                    <input type="number" id="prod-price" required min="1" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg focus:outline-none focus:border-yellow-400">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-stone-300 mb-1">Categoría*</label>
+                    <select id="prod-category" required class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg focus:outline-none focus:border-yellow-400">
+                        <!-- Categorías dinámicas -->
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">Ingredientes / Descripción</label>
+                <textarea id="prod-desc" rows="2" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg focus:outline-none focus:border-yellow-400" placeholder="Ej: 130g carne, doble queso..."></textarea>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">URL de la Imagen</label>
+                <input type="url" id="prod-img" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg focus:outline-none focus:border-yellow-400" placeholder="https://ejemplo.com/hamburguesa.jpg">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-stone-300 mb-1">Etiqueta (Opcional)</label>
+                <input type="text" id="prod-tag" class="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 text-white rounded-lg focus:outline-none focus:border-yellow-400" placeholder="Ej: Recomendado, Nuevo, Picante">
+            </div>
+            <div class="pt-2 flex gap-3">
+                <button type="button" onclick="closeProductModal()" class="flex-1 py-2 border border-neutral-700 text-neutral-300 rounded-lg hover:bg-neutral-800">Cancelar</button>
+                <button type="submit" class="flex-1 py-2 bg-yellow-400 text-neutral-950 font-bold rounded-lg hover:bg-yellow-500">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<section id="hero-section" class="relative overflow-hidden py-16 sm:py-24">
+    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
+        <!-- Textos del Hero -->
+        <div class="md:col-span-7 text-center md:text-left space-y-6">
+            <div id="promo-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-950/60 text-rose-400 border border-rose-500/30 tracking-wide uppercase">
+                <i class="ph-bold ph-flame text-base animate-bounce"></i> ¡AL CARBÓN COMPA!
+            </div>
+            <h2 id="hero-title" class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white uppercase">
+                Bienvenido a <span class="text-yellow-400 neon-text-yellow block sm:inline">Deliburger</span>
+            </h2>
+            <p id="hero-desc" class="text-base sm:text-lg text-neutral-300 max-w-xl mx-auto md:mx-0">
+                Hamburguesas de verdad preparadas al carbón con ingredientes de excelente calidad, deliciosas costras de queso fundido y pan brioche calientito. ¡Ordena de inmediato a domicilio!
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+                <a href="#menu-container" id="hero-cta-menu" class="px-8 py-3.5 bg-yellow-400 text-neutral-950 hover:bg-yellow-500 font-bold rounded-xl shadow-lg text-center transition-transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-book-open-text mr-1 text-lg"></i> Ver Carta Completa
+                </a>
+                <button onclick="scrollToSupport()" class="px-8 py-3.5 bg-neutral-900 border border-neutral-700 text-stone-200 rounded-xl font-bold text-center hover:bg-neutral-800 shadow-sm transition-transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-phone mr-1 text-lg text-emerald-400"></i> Contacto / Ubicación
+                </button>
+            </div>
+            
+            <!-- Features de Deliburger -->
+            <div class="grid grid-cols-3 gap-4 pt-6 border-t border-neutral-850 max-w-md mx-auto md:mx-0 text-center md:text-left">
+                <div>
+                    <h5 class="font-black text-yellow-400 text-xl" id="feat-min-order">$80</h5>
+                    <p class="text-xs text-stone-400">Pedido Mínimo</p>
+                </div>
+                <div>
+                    <h5 class="font-black text-yellow-400 text-xl" id="feat-delivery-cost">$30</h5>
+                    <p class="text-xs text-stone-400">Envío Estándar</p>
+                </div>
+                <div>
+                    <h5 class="font-black text-yellow-400 text-xl" id="feat-delivery-time">30-45 min</h5>
+                    <p class="text-xs text-stone-400">Tiempo de Entrega</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Imagen Destacada con Neon Glowing Border -->
+        <div class="md:col-span-5 relative flex justify-center">
+            <div class="relative w-72 h-72 sm:w-96 sm:h-96">
+                <!-- Glow del neón de fondo -->
+                <div id="hero-img-bg" class="absolute inset-0 rounded-3xl opacity-35 blur-xl transition-all duration-500 bg-rose-600"></div>
+                <!-- Imagen principal de Hamburguesa -->
+                <img id="hero-img" src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80" 
+                     onerror="this.src='https://placehold.co/600x600/1e1e1e/f59e0b?text=Deliburger'"
+                     alt="Hamburguesa de la casa" 
+                     class="w-full h-full object-cover rounded-3xl shadow-2xl relative z-10 border-4 border-yellow-400/80 hover:scale-105 transition-transform duration-500 neon-border-yellow">
+                
+                <!-- Placa Flotante (Gourmet / Queso) -->
+                <div class="absolute -bottom-4 -left-4 z-20 bg-neutral-900 p-3 rounded-xl shadow-xl flex items-center gap-3 max-w-[200px] border border-neutral-800">
+                    <div id="star-icon" class="w-10 h-10 rounded-lg flex items-center justify-center text-rose-500 border border-rose-500 bg-neutral-950 shrink-0 neon-border-pink">
+                        <i class="ph-bold ph-fire text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xxs font-extrabold text-stone-400 uppercase tracking-wider">La Estrella</p>
+                        <p id="star-dish-name" class="text-xs font-bold text-yellow-400 truncate leading-tight">Gourmet Manchego</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="menu-container" class="max-w-6xl mx-auto px-4 py-12 scroll-mt-24">
+    <div class="text-center space-y-3 mb-10">
+        <h3 id="menu-section-title" class="text-3xl font-black uppercase tracking-tight text-yellow-400 neon-text-yellow">Explora Nuestro Menú</h3>
+        <p class="text-stone-400 text-sm max-w-md mx-auto">Selecciona tu antojo de la parrilla, personaliza tu orden y recíbela calientita por WhatsApp.</p>
+    </div>
+
+    <!-- Barra de búsqueda y categorías -->
+    <div class="flex flex-col md:flex-row gap-4 items-center justify-between mb-8">
+        <!-- Buscador -->
+        <div class="relative w-full md:w-80">
+            <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 text-lg"></i>
+            <input type="text" id="search-input" oninput="filterMenu()" placeholder="Buscar tu antojo..." class="w-full pl-10 pr-4 py-2.5 bg-neutral-900 border border-neutral-800 text-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all">
+        </div>
+
+        <!-- Categorías -->
+        <div id="categories-list" class="flex gap-2 overflow-x-auto w-full md:w-auto no-scrollbar py-1">
+            <!-- Cargado dinámicamente -->
+        </div>
+    </div>
+
+    <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Tarjetas de comida cargadas vía JS -->
+    </div>
+
+    <div id="empty-state" class="hidden flex-col items-center justify-center py-20 text-center space-y-4 bg-neutral-900 rounded-3xl border border-dashed border-neutral-800 mt-6">
+        <div class="w-16 h-16 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 text-2xl">
+            <i class="ph ph-cooking-pot"></i>
+        </div>
+        <h4 class="font-bold text-stone-200">Platillo no encontrado</h4>
+        <p class="text-xs text-stone-400 max-w-xs">Intenta buscar con otros ingredientes de hamburguesa o categorías.</p>
+    </div>
+</section>
+
+<div id="cart-sidebar" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex justify-end">
+    <!-- Click para cerrar -->
+    <div class="absolute inset-0" onclick="toggleCart()"></div>
+    
+    <div class="relative w-full max-w-md bg-neutral-900 h-full shadow-2xl flex flex-col transform transition-transform duration-350 border-l border-neutral-850">
+        <!-- Encabezado Carrito -->
+        <div class="p-5 border-b border-neutral-800 flex items-center justify-between bg-neutral-950">
+            <div class="flex items-center gap-2">
+                <i class="ph-bold ph-shopping-bag-open text-xl text-yellow-400"></i>
+                <h3 class="font-bold text-white text-lg">Tu Orden</h3>
+                <span id="cart-items-count" class="px-2 py-0.5 bg-yellow-400 text-neutral-950 text-xs font-bold rounded-full">0</span>
+            </div>
+            <button onclick="toggleCart()" class="w-8 h-8 rounded-full hover:bg-neutral-800 flex items-center justify-center text-stone-400 transition-colors">
+                <i class="ph-bold ph-x text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Artículos añadidos -->
+        <div class="flex-1 overflow-y-auto p-5 space-y-4 no-scrollbar" id="cart-items-container">
+            <!-- Insertado dinámicamente -->
+        </div>
+
+        <!-- Formulario de Entrega a Domicilio -->
+        <div class="p-5 bg-neutral-950 border-t border-neutral-850 space-y-3">
+            <h4 class="text-xs font-bold text-yellow-400 uppercase tracking-wider mb-1">Datos para el Delivery</h4>
+            <div class="space-y-2">
+                <input type="text" id="order-name" placeholder="Tu Nombre Completo *" required class="w-full px-3 py-2 bg-neutral-900 border border-neutral-800 text-white rounded-lg text-sm outline-none focus:border-yellow-400">
+                <input type="text" id="order-address" placeholder="Dirección Exacta de Entrega *" required class="w-full px-3 py-2 bg-neutral-900 border border-neutral-800 text-white rounded-lg text-sm outline-none focus:border-yellow-400">
+                <div class="grid grid-cols-2 gap-2">
+                    <select id="order-payment" class="w-full px-3 py-2 bg-neutral-900 border border-neutral-800 text-white rounded-lg text-sm outline-none focus:border-yellow-400">
+                        <option value="Efectivo">Pago en Efectivo</option>
+                        <option value="Transferencia">Transferencia Bancaria</option>
+                        <option value="Tarjeta">Pago con Tarjeta</option>
+                    </select>
+                    <input type="text" id="order-change" placeholder="¿Con cuánto pagas?" class="w-full px-3 py-2 bg-neutral-900 border border-neutral-800 text-white rounded-lg text-sm outline-none focus:border-yellow-400">
+                </div>
+                <input type="text" id="order-notes" placeholder="Notas adicionales (ej: Sin mostaza, casa portón blanco)" class="w-full px-3 py-2 bg-neutral-900 border border-neutral-800 text-white rounded-lg text-sm outline-none focus:border-yellow-400">
+            </div>
+        </div>
+
+        <!-- Desglose de Pago -->
+        <div class="p-5 border-t border-neutral-800 bg-neutral-900 space-y-4">
+            <div class="space-y-2 text-sm text-stone-300">
+                <div class="flex justify-between">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal" class="font-bold text-white">$0.00</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Costo de envío:</span>
+                    <span id="cart-delivery" class="font-bold text-white">$0.00</span>
+                </div>
+                <div id="min-order-warning" class="hidden text-xs text-rose-400 text-center bg-rose-950/40 p-2 rounded-lg border border-rose-500/25">
+                    <i class="ph-bold ph-warning-circle"></i> El pedido mínimo es de <span id="warn-min-amount">$0.00</span>
+                </div>
+                <div class="flex justify-between text-lg font-black text-yellow-400 border-t border-neutral-800 pt-2">
+                    <span>Total estimado:</span>
+                    <span id="cart-grand-total" class="neon-text-yellow">$0.00</span>
+                </div>
+            </div>
+
+            <!-- Botón Enviar Pedido a WhatsApp -->
+            <button onclick="sendOrderToWhatsApp()" id="checkout-btn" disabled class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 disabled:bg-neutral-800 disabled:text-neutral-500 disabled:cursor-not-allowed text-white font-black rounded-xl flex items-center justify-center gap-2 shadow-md transition-all active:scale-95">
+                <i class="ph-bold ph-whatsapp-logo text-xl"></i>
+                Pedir por WhatsApp Ahora
+            </button>
+            <p class="text-center text-[10px] text-stone-500">Al presionar se armará un mensaje automático de compra.</p>
+        </div>
+    </div>
+</div>
+
+<div id="toast-container" class="fixed bottom-4 left-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+<footer class="bg-neutral-950 text-neutral-400 pt-16 pb-8 border-t border-neutral-900">
+    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-10 pb-12 border-b border-neutral-900">
+        <div class="space-y-4">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center text-neutral-950 text-md font-extrabold">
+                    <i class="ph-bold ph-chef-hat"></i>
+                </div>
+                <span id="foot-brand" class="font-black text-xl text-yellow-400">Deliburger</span>
+            </div>
+            <p id="foot-desc" class="text-sm text-stone-400 leading-relaxed">
+                Comprometidos con llevar el mejor sabor de hamburguesas al carbón a tu mesa, utilizando ingredientes frescos e higiene absoluta.
+            </p>
+        </div>
+
+        <div class="space-y-4">
+            <h4 class="font-bold text-white tracking-wide uppercase text-xs">Horarios de Atención</h4>
+            <ul class="text-sm space-y-2 text-stone-400">
+                <li class="flex justify-between"><span>De Miércoles a Lunes:</span> <span id="hours-week">4:00 PM - 11:59 PM</span></li>
+                <li class="flex justify-between"><span>Martes:</span> <span class="text-rose-400">Descanso</span></li>
+                <li class="flex items-center gap-2 pt-2 text-xs text-emerald-400 font-semibold">
+                    <span id="foot-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="foot-status-text">Abierto ahora</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="space-y-4">
+            <h4 class="font-bold text-white tracking-wide uppercase text-xs">Ubicación & Contacto</h4>
+            <p id="foot-address" class="text-sm text-stone-400">
+                Calle 5, Agrícola Pantitlán, Ciudad de México, CDMX
+            </p>
+            <a id="foot-maps" href="https://maps.google.com/?q=Deliburger+Agricola+Pantitlan" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-yellow-400 hover:text-yellow-300 transition-colors">
+                <i class="ph-bold ph-map-pin"></i> Ver en Google Maps
+            </a>
+            
+            <div class="flex gap-3 pt-2">
+                <a href="#" class="w-9 h-9 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white hover:bg-neutral-800 transition-colors"><i class="ph-bold ph-facebook-logo"></i></a>
+                <a href="#" class="w-9 h-9 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white hover:bg-neutral-800 transition-colors"><i class="ph-bold ph-instagram-logo"></i></a>
+                <a id="footer-wa-icon" href="#" class="w-9 h-9 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center text-white hover:bg-neutral-800 transition-colors"><i class="ph-bold ph-whatsapp-logo text-emerald-400"></i></a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="max-w-6xl mx-auto px-4 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
+        <p>&copy; 2026 Deliburger - Pedidos Express de Hamburguesas.</p>
+        <p class="flex items-center gap-1"><i class="ph-bold ph-shield-check text-emerald-400"></i> Desarrollado con enlace directo de WhatsApp.</p>
+    </div>
+</footer>
+
+<script>
+    // Inicialización del Sitio
+    document.addEventListener("DOMContentLoaded", () => {
+        applyConfig();
+        checkRestaurantStatus();
+        renderCategories();
+        renderMenu();
+        updateCartUI();
+        
+        // Ejecutar revisión periódica del horario
+        setInterval(checkRestaurantStatus, 60000);
+    });
+
+    // Notificaciones Toast sin usar Alerts
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg text-white font-medium text-sm transition-all duration-300 translate-y-4 opacity-0 pointer-events-auto max-w-sm border ${
+            type === 'success' ? 'bg-emerald-600 border-emerald-500' : 
+            type === 'warning' ? 'bg-amber-600 border-amber-500' : 'bg-rose-600 border-rose-500'
+        }`;
+        
+        const icon = type === 'success' ? 'ph-check-circle' : type === 'warning' ? 'ph-warning' : 'ph-x-circle';
+        toast.innerHTML = `<i class="ph-bold ${icon} text-lg shrink-0"></i> <span>${message}</span>`;
+        
+        container.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.classList.remove('translate-y-4', 'opacity-0');
+        }, 10);
+
+        setTimeout(() => {
+            toast.classList.add('translate-y-4', 'opacity-0');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // Comprobar estado de Deliburger según horario
+    function checkRestaurantStatus() {
+        const now = new Date();
+        const day = now.getDay(); // 0 Domingo, 2 Martes
+        const currentHours = now.getHours();
+        const currentMinutes = now.getMinutes();
+        const totalMinutesNow = (currentHours * 60) + currentMinutes;
+
+        const [openH, openM] = config.openHour.split(':').map(Number);
+        const [closeH, closeM] = config.closeHour.split(':').map(Number);
+        const openMinTotal = (openH * 60) + openM;
+        const closeMinTotal = (closeH * 60) + closeM;
+
+        let isOpen = false;
+
+        // Cerrado los martes por descanso
+        if (day !== 2) { 
+            if (closeMinTotal > openMinTotal) {
+                isOpen = (totalMinutesNow >= openMinTotal && totalMinutesNow <= closeMinTotal);
+            } else {
+                // Cruza medianoche (ej. 4 PM a 12 AM)
+                isOpen = (totalMinutesNow >= openMinTotal || totalMinutesNow <= closeMinTotal);
+            }
+        }
+
+        const dot = document.getElementById('status-dot');
+        const text = document.getElementById('status-text');
+        const footDot = document.getElementById('foot-status-dot');
+        const footText = document.getElementById('foot-status-text');
+
+        if (isOpen) {
+            dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+            text.innerText = `Abierto (Hoy cerramos a las ${config.closeHour})`;
+            text.className = "text-xs text-emerald-400 font-semibold";
+            footDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+            footText.innerText = "Abierto ahora";
+            footText.className = "text-xs text-emerald-400 font-semibold";
+        } else {
+            dot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+            text.innerText = day === 2 ? "Cerrado por descanso" : `Cerrado (Abre hoy a las ${config.openHour})`;
+            text.className = "text-xs text-rose-400 font-semibold";
+            footDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+            footText.innerText = day === 2 ? "Cerrado por descanso (Martes)" : `Cerrado en este momento (Abre a las ${config.openHour})`;
+            footText.className = "text-xs text-rose-400 font-semibold";
+        }
+    }
+
+    // Sincronizar configuraciones visuales del tema
+    function applyConfig() {
+        document.getElementById('brand-name').innerText = config.name;
+        document.getElementById('foot-brand').innerText = config.name;
+        
+        document.getElementById('promo-badge').innerHTML = `<i class="ph-bold ph-flame text-base animate-bounce"></i> ${config.promoBadge || '¡AL CARBÓN COMPA!'}`;
+        document.getElementById('hero-title').innerHTML = config.heroTitle || `Bienvenido a <span class="text-yellow-400 neon-text-yellow block sm:inline">${config.name}</span>`;
+        document.getElementById('hero-desc').innerText = config.heroDesc || config.slogan;
+        
+        document.getElementById('foot-desc').innerText = `${config.slogan}. Elaborados con pasión a la parrilla bajo estrictas medidas higiénicas para ofrecerte un servicio inigualable.`;
+        
+        document.getElementById('foot-address').innerText = config.address;
+        document.getElementById('foot-maps').href = config.mapsLink;
+        document.getElementById('footer-wa-icon').href = `https://wa.me/${config.whatsapp}`;
+        
+        document.getElementById('feat-min-order').innerText = `${config.currency}${config.minOrder}`;
+        document.getElementById('feat-delivery-cost').innerText = `${config.currency}${config.deliveryFee}`;
+        document.getElementById('hours-week').innerText = `${config.openHour} - ${config.closeHour}`;
+
+        // Sincronizar inputs administrativos
+        document.getElementById('cfg-name').value = config.name;
+        document.getElementById('cfg-slogan').value = config.slogan;
+        document.getElementById('cfg-promo').value = config.promoBadge || "";
+        document.getElementById('cfg-hero-title').value = config.heroTitle || "";
+        document.getElementById('cfg-hero-desc').value = config.heroDesc || "";
+        document.getElementById('cfg-whatsapp').value = config.whatsapp;
+        document.getElementById('cfg-delivery').value = config.deliveryFee;
+        document.getElementById('cfg-min').value = config.minOrder;
+        document.getElementById('cfg-open').value = config.openHour;
+        document.getElementById('cfg-close').value = config.closeHour;
+    }
+</script>
+
+<script>
+    function renderCategories() {
+        const catContainer = document.getElementById('categories-list');
+        catContainer.innerHTML = '';
+
+        const allBtn = document.createElement('button');
+        allBtn.innerText = "Todas";
+        allBtn.onclick = () => selectCategory("Todas");
+        styleCategoryButton(allBtn, currentCategory === "Todas");
+        catContainer.appendChild(allBtn);
+
+        config.categories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.innerText = cat;
+            btn.onclick = () => selectCategory(cat);
+            styleCategoryButton(btn, currentCategory === cat);
+            catContainer.appendChild(btn);
+        });
+    }
+
+    function styleCategoryButton(btn, isActive) {
+        if (isActive) {
+            btn.className = `px-5 py-2.5 bg-yellow-400 text-neutral-950 font-bold text-xs rounded-full shadow-lg whitespace-nowrap transition-all border border-yellow-400 neon-border-yellow`;
+        } else {
+            btn.className = `px-5 py-2.5 bg-neutral-900 border border-neutral-800 text-neutral-300 hover:bg-neutral-800 text-xs font-semibold rounded-full whitespace-nowrap transition-all`;
+        }
+    }
+
+    function selectCategory(category) {
+        currentCategory = category;
+        renderCategories();
+        renderMenu();
+    }
+
+    function filterMenu() {
+        renderMenu();
+    }
+
+    // Renderizar listado principal de hamburguesas
+    function renderMenu() {
+        const grid = document.getElementById('menu-grid');
+        const emptyState = document.getElementById('empty-state');
+        const searchQuery = document.getElementById('search-input').value.toLowerCase();
+        
+        grid.innerHTML = '';
+        
+        let filteredItems = config.menu.filter(item => {
+            const matchesCat = (currentCategory === "Todas" || item.category === currentCategory);
+            const matchesSearch = item.name.toLowerCase().includes(searchQuery) || item.description.toLowerCase().includes(searchQuery);
+            return matchesCat && matchesSearch;
+        });
+
+        if (filteredItems.length === 0) {
+            grid.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+            return;
+        }
+
+        grid.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+
+        filteredItems.forEach(item => {
+            const card = document.createElement('div');
+            card.className = `overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/90 shadow-lg hover:border-yellow-400/40 hover:shadow-2xl transition-all duration-300 flex flex-col h-full group relative`;
+            
+            const cartItem = cart.find(i => i.id === item.id);
+            const quantityInCart = cartItem ? cartItem.qty : 0;
+
+            card.innerHTML = `
+                <div class="relative h-44 overflow-hidden bg-neutral-950">
+                    <img src="${item.image}" alt="${item.name}" 
+                         onerror="this.src='https://placehold.co/500x350/1e1e1e/f59e0b?text=${encodeURIComponent(item.name)}'"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+                    
+                    ${item.tag ? `<span class="absolute top-3 left-3 px-2.5 py-1 bg-rose-950/95 border border-rose-500/40 text-rose-300 font-extrabold text-[10px] rounded-lg shadow-md uppercase tracking-wider neon-border-pink">${item.tag}</span>` : ''}
+                    
+                    ${quantityInCart > 0 ? `
+                        <div class="absolute top-3 right-3 w-8 h-8 rounded-full bg-emerald-600 border border-emerald-400 text-white flex items-center justify-center font-bold text-xs shadow-lg animate-scale-up">
+                            ${quantityInCart}
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="p-5 flex-1 flex flex-col justify-between space-y-3">
+                    <div class="space-y-1">
+                        <div class="flex justify-between items-start gap-2">
+                            <h4 class="font-bold text-stone-100 group-hover:text-yellow-400 text-base leading-snug transition-colors">${item.name}</h4>
+                            <span class="font-extrabold text-yellow-400 text-base whitespace-nowrap">${config.currency}${item.price}</span>
+                        </div>
+                        <p class="text-xs text-stone-400 leading-relaxed">${item.description || 'Hamburguesa al carbón con todo el sabor tradicional.'}</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-2">
+                        ${quantityInCart > 0 ? `
+                            <div class="flex items-center justify-between border border-neutral-800 rounded-xl w-full px-2 py-1 bg-neutral-950">
+                                <button onclick="decreaseItem(${item.id})" class="w-8 h-8 rounded-lg hover:bg-neutral-800 text-stone-300 flex items-center justify-center transition-colors">
+                                    <i class="ph-bold ph-minus text-sm"></i>
+                                </button>
+                                <span class="font-extrabold text-yellow-400 text-sm">${quantityInCart}</span>
+                                <button onclick="addToCart(${item.id})" class="w-8 h-8 rounded-lg hover:bg-neutral-800 text-stone-300 flex items-center justify-center transition-colors">
+                                    <i class="ph-bold ph-plus text-sm"></i>
+                                </button>
+                            </div>
+                        ` : `
+                            <button onclick="addToCart(${item.id})" class="w-full py-2.5 bg-neutral-950 hover:bg-yellow-400 hover:text-neutral-950 text-yellow-400 font-bold border border-yellow-400/40 hover:border-yellow-400 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm">
+                                <i class="ph-bold ph-plus-circle text-base"></i> Añadir a Orden
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+</script>
+
+<script>
+    function toggleCart() {
+        const sidebar = document.getElementById('cart-sidebar');
+        if (sidebar.classList.contains('hidden')) {
+            sidebar.classList.remove('hidden');
+        } else {
+            sidebar.classList.add('hidden');
+        }
+    }
+
+    function addToCart(productId) {
+        const product = config.menu.find(p => p.id === productId);
+        if (!product) return;
+
+        const existing = cart.find(item => item.id === productId);
+        if (existing) {
+            existing.qty++;
+        } else {
+            cart.push({ ...product, qty: 1 });
+        }
+
+        updateCartUI();
+        renderMenu();
+        showToast(`¡${product.name} agregado!`);
+    }
+
+    function decreaseItem(productId) {
+        const idx = cart.findIndex(item => item.id === productId);
+        if (idx === -1) return;
+
+        if (cart[idx].qty > 1) {
+            cart[idx].qty--;
+        } else {
+            cart.splice(idx, 1);
+        }
+
+        updateCartUI();
+        renderMenu();
+        showToast("Orden actualizada", "warning");
+    }
+
+    function removeItem(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        updateCartUI();
+        renderMenu();
+        showToast("Eliminado de la orden", "warning");
+    }
+
+    function updateCartUI() {
+        const cartContainer = document.getElementById('cart-items-container');
+        const cartCountBadge = document.getElementById('cart-count');
+        const cartHeaderTotal = document.getElementById('cart-header-total');
+        const cartSubtotalEl = document.getElementById('cart-subtotal');
+        const cartDeliveryEl = document.getElementById('cart-delivery');
+        const cartGrandTotalEl = document.getElementById('cart-grand-total');
+        const itemsCountBadge = document.getElementById('cart-items-count');
+        const minWarning = document.getElementById('min-order-warning');
+        const checkoutBtn = document.getElementById('checkout-btn');
+
+        cartContainer.innerHTML = '';
+        
+        let totalItems = 0;
+        let subtotal = 0;
+
+        if (cart.length === 0) {
+            cartContainer.innerHTML = `
+                <div class="flex flex-col items-center justify-center py-16 text-center space-y-3">
+                    <div class="w-14 h-14 rounded-full bg-neutral-950 border border-neutral-800 flex items-center justify-center text-neutral-600 text-xl">
+                        <i class="ph ph-shopping-cart"></i>
+                    </div>
+                    <p class="text-sm font-semibold text-stone-400">Orden vacía</p>
+                    <p class="text-xs text-stone-500 max-w-xs">Agrega unas ricas hamburguesas al carbón para habilitar el delivery.</p>
+                </div>
+            `;
+        } else {
+            cart.forEach(item => {
+                totalItems += item.qty;
+                subtotal += (item.price * item.qty);
+
+                const div = document.createElement('div');
+                div.className = "flex gap-3 bg-neutral-950 p-3 rounded-xl border border-neutral-800 shadow-sm relative group";
+                div.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" 
+                         onerror="this.src='https://placehold.co/100x100/1e1e1e/f59e0b?text=${encodeURIComponent(item.name)}'"
+                         class="w-16 h-16 rounded-lg object-cover shrink-0 bg-neutral-900 border border-neutral-800">
+                    <div class="flex-1 min-w-0 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start gap-1">
+                                <h4 class="text-xs font-bold text-stone-100 truncate pr-4">${item.name}</h4>
+                                <button onclick="removeItem(${item.id})" class="text-stone-500 hover:text-rose-500 transition-colors">
+                                    <i class="ph-bold ph-trash text-sm"></i>
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-stone-500 leading-none">P. Unitario: ${config.currency}${item.price}</p>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <div class="flex items-center gap-2 border border-neutral-800 rounded-lg bg-neutral-900 px-1 py-0.5">
+                                <button onclick="decreaseItem(${item.id})" class="w-6 h-6 hover:bg-neutral-800 rounded text-stone-400 flex items-center justify-center transition-colors"><i class="ph-bold ph-minus text-xxs"></i></button>
+                                <span class="text-xs font-bold text-yellow-400">${item.qty}</span>
+                                <button onclick="addToCart(${item.id})" class="w-6 h-6 hover:bg-neutral-800 rounded text-stone-400 flex items-center justify-center transition-colors"><i class="ph-bold ph-plus text-xxs"></i></button>
+                            </div>
+                            <span class="text-xs font-bold text-stone-200">${config.currency}${item.price * item.qty}</span>
+                        </div>
+                    </div>
+                `;
+                cartContainer.appendChild(div);
+            });
+        }
+
+        const deliveryFee = subtotal > 0 ? config.deliveryFee : 0;
+        const grandTotal = subtotal + deliveryFee;
+
+        cartCountBadge.innerText = totalItems;
+        itemsCountBadge.innerText = totalItems;
+        cartHeaderTotal.innerText = `${config.currency}${subtotal.toFixed(2)}`;
+        cartSubtotalEl.innerText = `${config.currency}${subtotal.toFixed(2)}`;
+        cartDeliveryEl.innerText = `${config.currency}${deliveryFee.toFixed(2)}`;
+        cartGrandTotalEl.innerText = `${config.currency}${grandTotal.toFixed(2)}`;
+
+        const meetsMinimum = subtotal >= config.minOrder;
+        
+        if (subtotal > 0 && !meetsMinimum) {
+            minWarning.classList.remove('hidden');
+            document.getElementById('warn-min-amount').innerText = `${config.currency}${config.minOrder}`;
+            checkoutBtn.disabled = true;
+        } else {
+            minWarning.classList.add('hidden');
+            checkoutBtn.disabled = (cart.length === 0);
+        }
+    }
+
+    // Compilar orden y enviar a WhatsApp
+    function sendOrderToWhatsApp() {
+        const clientName = document.getElementById('order-name').value.trim();
+        const clientAddress = document.getElementById('order-address').value.trim();
+        const paymentMethod = document.getElementById('order-payment').value;
+        const changeAmount = document.getElementById('order-change').value.trim();
+        const notes = document.getElementById('order-notes').value.trim();
+
+        if (!clientName || !clientAddress) {
+            showToast("Completa tus datos obligatorios para el delivery", "error");
+            return;
+        }
+
+        // Formato estructurado del pedido para WhatsApp
+        let message = `*🔥 ¡Hola! Nuevo Pedido para ${config.name} a Domicilio* 🎉\n`;
+        message += `=================================\n`;
+        message += `👤 *Cliente:* ${clientName}\n`;
+        message += `📍 *Dirección de Entrega:* ${clientAddress}\n`;
+        message += `=================================\n\n`;
+        message += `🍔 *Detalle de la Orden:*\n`;
+
+        let subtotal = 0;
+        cart.forEach(item => {
+            const cost = item.price * item.qty;
+            subtotal += cost;
+            message += `• *${item.qty}x* ${item.name} (${config.currency}${item.price} c/u) → *${config.currency}${cost}*\n`;
+        });
+
+        message += `\n---------------------------------\n`;
+        message += `*Subtotal:* ${config.currency}${subtotal.toFixed(2)}\n`;
+        message += `*Costo de Envío:* ${config.currency}${config.deliveryFee.toFixed(2)}\n`;
+        message += `🔥 *Total a Pagar:* ${config.currency}${(subtotal + config.deliveryFee).toFixed(2)}\n`;
+        message += `---------------------------------\n\n`;
+        message += `💳 *Método de Pago:* ${paymentMethod}\n`;
+        
+        if (paymentMethod === "Efectivo" && changeAmount) {
+            message += `💵 *Cambio de:* ${config.currency}${changeAmount}\n`;
+        }
+        
+        if (notes) {
+            message += `📝 *Notas del cliente:* _${notes}_\n`;
+        }
+
+        message += `\n_Pedido enviado de forma directa desde Menú Web._`;
+
+        const encodedText = encodeURIComponent(message);
+        const waLink = `https://api.whatsapp.com/send?phone=${config.whatsapp}&text=${encodedText}`;
+
+        window.open(waLink, '_blank');
+        showToast("Redirigiendo a WhatsApp de Deliburger...");
+    }
+</script>
+
+<script>
+    function toggleCustomizer() {
+        const panel = document.getElementById('customizer-panel');
+        if (panel.classList.contains('hidden')) {
+            panel.classList.remove('hidden');
+            loadAdminPanelData();
+        } else {
+            panel.classList.add('hidden');
+        }
+    }
+
+    function loadAdminPanelData() {
+        document.getElementById('cfg-name').value = config.name;
+        document.getElementById('cfg-slogan').value = config.slogan;
+        document.getElementById('cfg-promo').value = config.promoBadge || "";
+        document.getElementById('cfg-hero-title').value = config.heroTitle || "";
+        document.getElementById('cfg-hero-desc').value = config.heroDesc || "";
+        document.getElementById('cfg-whatsapp').value = config.whatsapp;
+        document.getElementById('cfg-delivery').value = config.deliveryFee;
+        document.getElementById('cfg-min').value = config.minOrder;
+        document.getElementById('cfg-open').value = config.openHour;
+        document.getElementById('cfg-close').value = config.closeHour;
+
+        renderAdminProductList();
+        
+        const catSelect = document.getElementById('prod-category');
+        catSelect.innerHTML = '';
+        config.categories.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat;
+            opt.innerText = cat;
+            catSelect.appendChild(opt);
+        });
+    }
+
+    function renderAdminProductList() {
+        const list = document.getElementById('admin-menu-list');
+        list.innerHTML = '';
+
+        config.menu.forEach(item => {
+            const div = document.createElement('div');
+            div.className = "flex items-center justify-between p-2 bg-neutral-950 border border-neutral-850 rounded-lg text-xs gap-2";
+            div.innerHTML = `
+                <div class="flex items-center gap-2 truncate">
+                    <img src="${item.image}" alt="" onerror="this.src='https://placehold.co/50x50/eee/333?text=Menu'" class="w-8 h-8 rounded object-cover shrink-0 bg-neutral-900 border border-neutral-850">
+                    <div class="truncate">
+                        <p class="font-bold text-stone-200 truncate">${item.name}</p>
+                        <p class="text-stone-500">${config.currency}${item.price} • ${item.category}</p>
+                    </div>
+                </div>
+                <div class="flex gap-1 shrink-0">
+                    <button onclick="editProduct(${item.id})" class="p-1.5 bg-neutral-800 text-yellow-400 rounded hover:bg-neutral-700"><i class="ph-bold ph-pencil-simple"></i></button>
+                    <button onclick="deleteProduct(${item.id})" class="p-1.5 bg-neutral-800 text-rose-400 rounded hover:bg-neutral-700"><i class="ph-bold ph-trash-simple"></i></button>
+                </div>
+            `;
+            list.appendChild(div);
+        });
+    }
+
+    function saveAdminConfig() {
+        config.name = document.getElementById('cfg-name').value.trim() || config.name;
+        config.slogan = document.getElementById('cfg-slogan').value.trim() || config.slogan;
+        config.promoBadge = document.getElementById('cfg-promo').value.trim() || "";
+        config.heroTitle = document.getElementById('cfg-hero-title').value.trim() || "";
+        config.heroDesc = document.getElementById('cfg-hero-desc').value.trim() || "";
+        config.whatsapp = document.getElementById('cfg-whatsapp').value.trim() || config.whatsapp;
+        config.deliveryFee = Number(document.getElementById('cfg-delivery').value) || 0;
+        config.minOrder = Number(document.getElementById('cfg-min').value) || 0;
+        config.openHour = document.getElementById('cfg-open').value || config.openHour;
+        config.closeHour = document.getElementById('cfg-close').value || config.closeHour;
+
+        localStorage.setItem('restaurant_config', JSON.stringify(config));
+        
+        applyConfig();
+        checkRestaurantStatus();
+        renderCategories();
+        renderMenu();
+        updateCartUI();
+        
+        toggleCustomizer();
+        showToast("Configuración del negocio guardada exitosamente.");
+    }
+
+    function resetToDefaultConfig() {
+        const resetConfirm = document.createElement('div');
+        // Custom reset fallback inside custom HTML workflow
+        if(confirm("¿Estás seguro de que deseas restablecer todos los valores, menús y diseños de Deliburger por defecto?")) {
+            localStorage.removeItem('restaurant_config');
+            config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+            cart = [];
+            applyConfig();
+            checkRestaurantStatus();
+            renderCategories();
+            renderMenu();
+            updateCartUI();
+            toggleCustomizer();
+            showToast("Restaurado a valores de fábrica", "warning");
+        }
+    }
+
+    // Modal de Productos
+    function openAddProductModal() {
+        document.getElementById('product-modal-title').innerText = "Añadir Platillo";
+        document.getElementById('product-form').reset();
+        document.getElementById('prod-id').value = "";
+        document.getElementById('product-modal').classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+        document.getElementById('product-modal').classList.add('hidden');
+    }
+
+    function editProduct(id) {
+        const item = config.menu.find(i => i.id === id);
+        if(!item) return;
+
+        document.getElementById('product-modal-title').innerText = "Editar Platillo";
+        document.getElementById('prod-id').value = item.id;
+        document.getElementById('prod-name').value = item.name;
+        document.getElementById('prod-price').value = item.price;
+        document.getElementById('prod-category').value = item.category;
+        document.getElementById('prod-desc').value = item.description || "";
+        document.getElementById('prod-img').value = item.image || "";
+        document.getElementById('prod-tag').value = item.tag || "";
+
+        document.getElementById('product-modal').classList.remove('hidden');
+    }
+
+    function deleteProduct(id) {
+        if(confirm("¿Deseas eliminar permanentemente esta hamburguesa/platillo del menú?")) {
+            config.menu = config.menu.filter(i => i.id !== id);
+            cart = cart.filter(i => i.id !== id);
+            localStorage.setItem('restaurant_config', JSON.stringify(config));
+            renderAdminProductList();
+            renderMenu();
+            updateCartUI();
+            showToast("Platillo eliminado", "warning");
+        }
+    }
+
+    function handleProductSubmit(e) {
+        e.preventDefault();
+
+        const id = document.getElementById('prod-id').value;
+        const name = document.getElementById('prod-name').value.trim();
+        const price = Number(document.getElementById('prod-price').value);
+        const category = document.getElementById('prod-category').value;
+        const description = document.getElementById('prod-desc').value.trim();
+        const image = document.getElementById('prod-img').value.trim() || `https://placehold.co/500x350/1e1e1e/f59e0b?text=${encodeURIComponent(name)}`;
+        const tag = document.getElementById('prod-tag').value.trim();
+
+        if(id) {
+            const idx = config.menu.findIndex(i => i.id === Number(id));
+            if(idx !== -1) {
+                config.menu[idx] = { ...config.menu[idx], name, price, category, description, image, tag };
+            }
+        } else {
+            const newId = config.menu.length > 0 ? Math.max(...config.menu.map(i => i.id)) + 1 : 1;
+            config.menu.push({ id: newId, name, price, category, description, image, tag });
+        }
+
+        localStorage.setItem('restaurant_config', JSON.stringify(config));
+        renderMenu();
+        renderAdminProductList();
+        closeProductModal();
+        showToast("Platillo guardado");
+    }
+
+    function scrollToSupport() {
+        const contactSection = document.querySelector('footer');
+        if (contactSection) {
+            contactSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+
+</body>
+</html>
